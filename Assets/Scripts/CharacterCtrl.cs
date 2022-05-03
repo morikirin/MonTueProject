@@ -11,6 +11,7 @@ public class CharacterCtrl : MonoBehaviour
 
     private bool movingSwitch;
     private Vector2 movingTargetPos;
+    private Vector2 movingVector;
 
 
     private void Awake()
@@ -30,10 +31,11 @@ public class CharacterCtrl : MonoBehaviour
 
     private void MovingRequire()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             movingSwitch = true;
             movingTargetPos = mousePos.GetPos();
+            movingVector = new Vector2(movingTargetPos.x - Position2D().x, movingTargetPos.y - Position2D().y);
         }
     }
 
@@ -41,8 +43,7 @@ public class CharacterCtrl : MonoBehaviour
     {
         if (!movingSwitch)
             return;
-        Vector2 movingVector = new Vector2 (movingTargetPos.x - Position2D().x, movingTargetPos.y - Position2D().y);
-        rigidy.velocity = movingVector * movingSpd * Time.deltaTime;
+        rigidy.velocity = movingVector.normalized * movingSpd * Time.deltaTime;
 
         MovingArrived();
     }
