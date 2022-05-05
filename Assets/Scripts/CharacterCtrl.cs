@@ -34,7 +34,8 @@ public class CharacterCtrl : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             movingSwitch = true;
-            movingTargetPos = mousePos.GetPos();
+            if (mousePos.GetPos() != Vector2.zero)
+                movingTargetPos = mousePos.GetPos();
             movingVector = new Vector2(movingTargetPos.x - Position2D().x, movingTargetPos.y - Position2D().y);
         }
     }
@@ -55,6 +56,11 @@ public class CharacterCtrl : MonoBehaviour
             movingSwitch = false;
             rigidy.velocity = Vector2.zero;
         }
+    }
+
+    public void GetItem()
+    {
+        Debug.Log("Get!!");
     }
 
 
