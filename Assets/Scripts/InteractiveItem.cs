@@ -10,11 +10,11 @@ public enum ItemCategory
 }
 public class InteractiveItem : MonoBehaviour
 {
-    public CharacterCtrl character;
+    public InteractiveItemCtrller interactiveItemCtrl;
+    private float canUseDistance = 2.5f;
+    private Collider2D spottedCharacter;
 
     public Image actTimeBar;
-
-    private float canUseDistance = 1f;
 
     private bool isCountdown = false;
     private float actCompleTime = 5f;
@@ -25,15 +25,15 @@ public class InteractiveItem : MonoBehaviour
         ItemActCompleteTimer();
     }
 
-
-
     private void OnMouseDown()
     {
-        Debug.Log("???");
-        ItemAction();
+        if (characterDistanceDetect())
+            interactiveItemCtrl.ItemActiveAction(this);
+        else
+            interactiveItemCtrl.GetCloserAction(this);
     }
 
-    private void ItemAction()
+    public void ItemAction()
     {
         if (characterDistanceDetect())
         {
@@ -62,7 +62,7 @@ public class InteractiveItem : MonoBehaviour
             if (actCompleRemaing < 0.0f)
             {
                 isCountdown = false;
-                character.GetItem();
+                
                 actTimeBar.fillAmount = 0f;
             }
             else
@@ -74,7 +74,9 @@ public class InteractiveItem : MonoBehaviour
 
     private bool characterDistanceDetect()
     {
-        if (Vector2.Distance(transform.position, character.transform.position) < canUseDistance)
+        spottedCharacter = Physics2D.OverlapCircle(transform.position, canUseDistance,LayerMask.GetMask("Character"));
+        
+        if (spottedCharacter != null)
             return true;
         else
             return false;
