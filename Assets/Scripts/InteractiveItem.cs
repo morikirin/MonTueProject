@@ -35,21 +35,10 @@ public class InteractiveItem : MonoBehaviour
 
     public void ItemAction()
     {
-        if (characterDistanceDetect())
+        if (!isCountdown)
         {
-            if (!isCountdown)
-            {
-                isCountdown = true;
-                actCompleRemaing = actCompleTime;
-            }
-            else
-            {
-                Debug.Log("距離太遠");
-            }
-        }
-        else
-        {
-            Debug.Log("距離太遠");
+            isCountdown = true;
+            actCompleRemaing = actCompleTime;
         }
     }
 
@@ -62,7 +51,7 @@ public class InteractiveItem : MonoBehaviour
             if (actCompleRemaing < 0.0f)
             {
                 isCountdown = false;
-                
+                interactiveItemCtrl.GetItemAction(this);
                 actTimeBar.fillAmount = 0f;
             }
             else
@@ -74,8 +63,8 @@ public class InteractiveItem : MonoBehaviour
 
     private bool characterDistanceDetect()
     {
-        spottedCharacter = Physics2D.OverlapCircle(transform.position, canUseDistance,LayerMask.GetMask("Character"));
-        
+        spottedCharacter = Physics2D.OverlapCircle(transform.position, canUseDistance, LayerMask.GetMask("Character"));
+
         if (spottedCharacter != null)
             return true;
         else
