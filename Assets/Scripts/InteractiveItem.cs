@@ -4,21 +4,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public enum ItemCategory
+public enum ItemType
 {
     food,
+    stone,
 }
 public class InteractiveItem : MonoBehaviour
 {
-    public InteractiveItemCtrller interactiveItemCtrl;
-    private float canUseDistance = 2.5f;
+    private float canUseDistance = 1f;
     private Collider2D spottedCharacter;
-
-    public Image actTimeBar;
 
     private bool isCountdown = false;
     private float actCompleTime = 5f;
     private float actCompleRemaing = 0f;
+
+    public MouseInteractiveCtrller mouseInteractiveCtrl;
+    public Image actTimeBar;
+    public ItemType itemType;
 
     private void Update()
     {
@@ -28,9 +30,9 @@ public class InteractiveItem : MonoBehaviour
     private void OnMouseDown()
     {
         if (characterDistanceDetect())
-            interactiveItemCtrl.ItemActiveAction(this);
+            mouseInteractiveCtrl.ItemActiveAction(this);
         else
-            interactiveItemCtrl.GetCloserAction(this);
+            mouseInteractiveCtrl.GetCloserAction(this);
     }
 
     public void ItemAction()
@@ -39,7 +41,13 @@ public class InteractiveItem : MonoBehaviour
         {
             isCountdown = true;
             actCompleRemaing = actCompleTime;
+            actTimeBar.enabled = true;
         }
+    }
+
+    public void ItemComplete()
+    {
+        Destroy(gameObject);
     }
 
     private void ItemActCompleteTimer()
@@ -51,8 +59,8 @@ public class InteractiveItem : MonoBehaviour
             if (actCompleRemaing < 0.0f)
             {
                 isCountdown = false;
-                interactiveItemCtrl.GetItemAction(this);
                 actTimeBar.fillAmount = 0f;
+                mouseInteractiveCtrl.GetItemAction(this);
             }
             else
             {
@@ -60,6 +68,7 @@ public class InteractiveItem : MonoBehaviour
             }
         }
     }
+
 
     private bool characterDistanceDetect()
     {

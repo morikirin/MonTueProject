@@ -4,24 +4,19 @@ using UnityEngine;
 
 public class CharacterCtrl : MonoBehaviour
 {
-    public MouseDetector mousePos;
-    public float movingSpd;
+    public MouseInteractiveCtrller mouseInteractiveCtrl;
 
     private Rigidbody2D rigidy;
 
     private bool movingSwitch;
-    private Vector2 movingTargetPos;
     private Vector2 movingVector;
 
+    public float movingSpd;
+    private Vector2 movingTargetPos;
 
     private void Awake()
     {
         rigidy = GetComponent<Rigidbody2D>();
-    }
-
-    private void Update()
-    {
-        MovingRequire();
     }
 
     private void FixedUpdate()
@@ -29,36 +24,27 @@ public class CharacterCtrl : MonoBehaviour
         Moving();
     }
 
-    private void MovingRequire()
+    public void MovingRequire(Vector2 position)
     {
-        if (Input.GetMouseButton(0))
-        {
-            movingSwitch = true;
-            if (mousePos.GetPos() != Vector2.zero)
-                movingTargetPos = mousePos.GetPos();
-            movingVector = new Vector2(movingTargetPos.x - Position2D().x, movingTargetPos.y - Position2D().y);
-        }
+        movingSwitch = true;
+        movingTargetPos = position;
+        movingVector = new Vector2(movingTargetPos.x - Position2D().x, movingTargetPos.y - Position2D().y);
     }
 
-    public void Moving()
+    private void Moving()
     {
         if (!movingSwitch)
             return;
         rigidy.velocity = movingVector.normalized * movingSpd * Time.deltaTime;
 
-        MovingArrived();
-    }
-
-    private void MovingArrived()
-    {
-        if(Vector2.Distance(Position2D(),movingTargetPos) < 0.1f) 
+        if (Vector2.Distance(Position2D(), movingTargetPos) < 0.1f)
         {
             movingSwitch = false;
             rigidy.velocity = Vector2.zero;
         }
     }
 
-    public void GetItem()
+    public void GetItem(ItemType gotItemType)
     {
         Debug.Log("Get!!");
     }
