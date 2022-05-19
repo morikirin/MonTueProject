@@ -13,7 +13,6 @@ public class MouseInteractiveCtrller : MonoBehaviour
     }
     public void GetItemAction(InteractiveItem activeItem)
     {
-        Debug.Log("Complete");
         character.GetItem(activeItem.itemType);
         activeItem.ItemComplete();
     }

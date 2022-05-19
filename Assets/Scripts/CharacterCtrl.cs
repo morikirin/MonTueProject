@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CharacterCtrl : MonoBehaviour
 {
@@ -11,12 +12,25 @@ public class CharacterCtrl : MonoBehaviour
     private bool movingSwitch;
     private Vector2 movingVector;
 
-    public float movingSpd;
+    [SerializeField]
+    private float movingSpd;
     private Vector2 movingTargetPos;
+
+    [Header("持有道具")]
+    public TextMeshProUGUI foodQuantityText;
+    public TextMeshProUGUI stoneQuantityText;
+    private int foodQuantity = 0;
+    private int stoneQuantity = 0;
 
     private void Awake()
     {
         rigidy = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        foodQuantityText.text = ": " + foodQuantity;
+        stoneQuantityText.text = ": " + stoneQuantity;
     }
 
     private void FixedUpdate()
@@ -46,7 +60,17 @@ public class CharacterCtrl : MonoBehaviour
 
     public void GetItem(ItemType gotItemType)
     {
-        Debug.Log("Get!!");
+        switch (gotItemType)
+        {
+            case ItemType.food:
+                foodQuantity += 1;
+                foodQuantityText.text = ": "+ foodQuantity;
+                break;
+            case ItemType.stone:
+                stoneQuantity += 1;
+                stoneQuantityText.text = ": " + stoneQuantity;
+                break;
+        }
     }
 
 
