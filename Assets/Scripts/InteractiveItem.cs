@@ -11,12 +11,16 @@ public enum ItemType
 }
 public class InteractiveItem : MonoBehaviour
 {
+    [SerializeField]
+    [Range(0.1f,3)]
     private float canUseDistance = 1f;
     private Collider2D spottedCharacter;
 
     private bool isCountdown = false;
-    private float actCompleTime = 5f;
-    private float actCompleRemaing = 0f;
+    [SerializeField]
+    [Range(1f, 10)]
+    private float actionCompleTime = 5f;
+    private float actionCompleRemaing = 0f;
 
     public MouseInteractiveCtrller mouseInteractiveCtrl;
     public Image actTimeBar;
@@ -25,6 +29,15 @@ public class InteractiveItem : MonoBehaviour
     private void Update()
     {
         ItemActCompleteTimer();
+    }
+
+    private void OnMouseEnter()
+    {
+        transform.localScale = new Vector3(0.6f,0.6f,1);
+    }
+    private void OnMouseExit()
+    {
+        transform.localScale = new Vector3(0.5f, 0.5f, 1);
     }
 
     private void OnMouseDown()
@@ -40,7 +53,7 @@ public class InteractiveItem : MonoBehaviour
         if (!isCountdown)
         {
             isCountdown = true;
-            actCompleRemaing = actCompleTime;
+            actionCompleRemaing = actionCompleTime;
             actTimeBar.enabled = true;
         }
     }
@@ -54,9 +67,9 @@ public class InteractiveItem : MonoBehaviour
     {
         if (isCountdown)
         {
-            actCompleRemaing -= Time.deltaTime;
+            actionCompleRemaing -= Time.deltaTime;
 
-            if (actCompleRemaing < 0.0f)
+            if (actionCompleRemaing < 0.0f)
             {
                 isCountdown = false;
                 actTimeBar.fillAmount = 0f;
@@ -64,9 +77,21 @@ public class InteractiveItem : MonoBehaviour
             }
             else
             {
-                actTimeBar.fillAmount = actCompleRemaing / actCompleTime;
+                actTimeBar.fillAmount = actionCompleRemaing / actionCompleTime;
+                if (!characterDistanceDetect())
+                {
+                    mouseInteractiveCtrl.StopItemActiveAction(this);
+                }
             }
         }
+    }
+
+    public void StopItemInteract()
+    {
+        isCountdown = false;
+        actTimeBar.fillAmount = 1f;
+        actionCompleRemaing = 0f;
+        actTimeBar.enabled = false;
     }
 
 
