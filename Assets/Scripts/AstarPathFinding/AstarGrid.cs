@@ -3,15 +3,25 @@ using System.Collections;
 
 public class AstarGrid : MonoBehaviour
 {
+    private Node[,] grid;
     public LayerMask unwalkableMask;
     /// <summary>
     /// 總範圍大小
     /// </summary>
-    public Vector2 gridWorldSize;   //總範圍大小
-    public float nodeRadius;    //節點大小
-    private Node[,] grid;
+    public Vector2 gridWorldSize;
+    /// <summary>
+    /// 節點大小(半徑)
+    /// </summary>
+    public float nodeRadius;
+    /// <summary>
+    /// 節點大小(直徑)
+    /// </summary>
     private float nodeDiameter;
+    /// <summary>
+    /// Grid格數化 矩陣的 行(X) 與 列(Y)
+    /// </summary>
     private int gridSizeX, gridSizeY;
+    public Transform player;
 
     private void Start()
     {
@@ -20,7 +30,6 @@ public class AstarGrid : MonoBehaviour
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
         CreatGrid();
     }
-
     private void CreatGrid()
     {
         grid = new Node[gridSizeX, gridSizeY];
@@ -38,8 +47,17 @@ public class AstarGrid : MonoBehaviour
         }
     }
 
-
-
+    public Node GetNodeFromWorldPoint(Vector2 worldPosition)
+    {
+        float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
+        float percentY = (worldPosition.y + gridWorldSize.y / 2) / gridWorldSize.y;
+        Debug.Log("x= " + percentX + ", y= " + percentY);
+        percentX = Mathf.Clamp01(percentX);
+        percentY = Mathf.Clamp01(percentY);
+        int x = Mathf.RoundToInt((gridSizeX - 1) * percentX);
+        int y = Mathf.RoundToInt((gridSizeY - 1) * percentY);
+        return grid[x, y];
+    }
 
     private void OnDrawGizmos()
     {
